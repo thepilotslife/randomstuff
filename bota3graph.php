@@ -10,6 +10,7 @@ ob_start();
 $airlines = array();
 $min = 0;
 $max;
+$times = array();
 function _d($a, $b, $c) {
   global $airlines;
   if (!array_key_exists($a[$b], $airlines)) $airlines[$a[$b]] = array();
@@ -17,6 +18,7 @@ function _d($a, $b, $c) {
 }
 foreach ($data as $d) {
   $time = strtotime($d[0]);
+  $times[] = $time;
   if ($min == 0) $min = $time;
   $max = $time;
   _d($d, 1, $time);
@@ -29,24 +31,32 @@ foreach ($data as $d) {
 unset($airlines['Lufthansa']);
 unset($airlines['Lightish']);
 
-$lastindex = array();
-$airlinenames = array();
-foreach ($airlines as $k => $v) {
-  $lastindex[$k] = 0;
-  $airlinenames[] = $k;
-}
-
-function lerp($a, $b, $c) { return round($a + ($b - $a) * $x); }
+function lerp($a, $b, $x) { return round($a + ($b - $a) * $x); }
+function prel($a, $b, $x) { return ($x - $a) / ($b - $a); }
 
 $values = array();
 foreach ($airlines as $name => $a) {
   $z = array();
-  foreach ($a as $d) {
-    $z[$d[0] - $min] = $d[1] * 1000;
+  $i = 0;
+  foreach ($times as $t) {
+    while ($i < count($a) && $a[$i+1][0] < $t) {
+      $i++;
+    }
+    if ($a[$i+1][0] == $t) {
+      $i++;
+      $z[$t-$min] = $a[$i][1] * 1000;
+      continue;
+    }
+    if ($a[$i][0] > $t) {
+      $z[$t-$min] = lerp(0, $a[$i][1], prel($min, $a[$i][0], $t)) * 1000;
+      continue;
+    }
+    $p = prel($a[$i][0], $a[$i+1][0], $t);
+    $z[$t-$min] = lerp($a[$i][1], $a[$i+1][1], $p) * 1000;
   }
   $values[] = $z;
 }
- 
+
 $settings = array(
   'back_colour'       => '#eee',    'stroke_colour'      => '#000',
   'back_stroke_width' => 0,         'back_stroke_colour' => '#eee',
@@ -60,7 +70,7 @@ $settings = array(
   'graph_title' => 'airlines earnings buring BOTA 3',
   'graph_title_position' => 'top',
   'graph_title_font_weight' => 'bold',
-  'legend_entries' => $airlinenames,
+  'legend_entries' => array_keys($airlines),
   'legend_position' => 'top left 4 4',
   'legend_back_colour' => 'rgba(204,204,204,0.6)',
   'legend_colour' => '#800',
@@ -72,10 +82,9 @@ $settings = array(
   'show_axis_text_h' => false,
 );
 
- 
 $graph = new SVGGraph(720, 300, $settings);
 //$graph->colours = array('blue');
- 
+
 $graph->Values($values);
 $graph->Render('MultiLineGraph');
 
