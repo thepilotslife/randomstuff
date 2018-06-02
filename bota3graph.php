@@ -74,7 +74,7 @@ $settings = array(
   'legend_position' => 'top left 4 4',
   'legend_back_colour' => 'rgba(204,204,204,0.6)',
   'legend_colour' => '#800',
-  'label_x' => 'Battle Of The Airlines 3 (Apr 30 - Jun 2 2018)',
+  'label_x' => 'Battle Of The Airlines 3 (Apr 30 - Jun 2, 2018)',
   'legend_round' => 5,
   //'grid_division_h' => ($max - $min) / 10,
   'grid_division_h' => ($max - $min),
@@ -83,7 +83,7 @@ $settings = array(
 );
 
 $graph = new SVGGraph(720, 300, $settings);
-//$graph->colours = array('blue');
+$graph->colours = array('orange', 'green', 'red');
 
 $graph->Values($values);
 $graph->Render('MultiLineGraph');
