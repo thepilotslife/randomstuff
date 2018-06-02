@@ -2,7 +2,7 @@
 [04-30 21:56:44] Jetstar 78 $122K Inverted 15 $21K Lufthansa 12 $19K
 [04-30 22:28:53] Jetstar 79 $123K Inverted 15 $21K Lufthansa 12 $19K
 [04-30 22:53:17] Jetstar 79 $123K American 23 $32K Inverted 15 $21K
-[04-30 22:55:16] Jetstar 79 $123K American 23 $32K Inverted 15 $21K{f
+[04-30 22:55:16] Jetstar 79 $123K American 23 $32K Inverted 15 $21K
 [04-30 22:57:53] Jetstar 79 $123K American 23 $32K Inverted 16 $21K
 [04-30 22:59:10] Jetstar 79 $123K American 23 $32K Inverted 16 $21K
 [04-30 23:16:47] Jetstar 79 $123K American 33 $47K Inverted 20 $26K
