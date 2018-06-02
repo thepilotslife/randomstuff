@@ -10,18 +10,24 @@ ob_start();
 $airlines = array();
 $min = 0;
 $max;
+function _d($a, $b, $c) {
+  global $airlines;
+  if (!array_key_exists($a[$b], $airlines)) $airlines[$a[$b]] = array();
+  $airlines[$a[$b]][] = array($c, $a[$b+1]);
+}
 foreach ($data as $d) {
   $time = strtotime($d[0]);
   if ($min == 0) $min = $time;
   $max = $time;
-  if (!array_key_exists($d[1], $airlines)) $airlines[$d[1]] = array();
-  $airlines[$d[1]][] = array($time, $d[2]);
-  if (!array_key_exists($d[3], $airlines)) $airlines[$d[3]] = array();
-  $airlines[$d[3]][] = array($time, $d[4]);
+  _d($d, 1, $time);
+  _d($d, 3, $time);
   if (count($d) == 5) continue;
-  if (!array_key_exists($d[5], $airlines)) $airlines[$d[5]] = array();
-  $airlines[$d[5]][] = array($time, $d[6]);
+  _d($d, 5, $time);
 }
+
+// incomplete data doesn't go that well
+unset($airlines['Lufthansa']);
+unset($airlines['Lightish']);
 
 $lastindex = array();
 $airlinenames = array();
@@ -40,7 +46,6 @@ foreach ($airlines as $name => $a) {
   }
   $values[] = $z;
 }
-print_r($values);
  
 $settings = array(
   'back_colour'       => '#eee',    'stroke_colour'      => '#000',
@@ -49,7 +54,7 @@ $settings = array(
   'axis_font'         => 'Tahoma',  'axis_font_size'     => 10,
   'grid_colour'       => '#666',    'label_colour'       => '#000',
   'pad_right'         => 10,        'pad_left'           => 10,
-  'fill_under'        => true,
+  'fill_under'        => true,      'fill_opacity'       => .3,
   'marker_size'       => 0,
   'line_stroke_width' => 1,
   'graph_title' => 'airlines earnings buring BOTA 3',
